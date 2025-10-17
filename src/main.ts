@@ -27,12 +27,6 @@ canvas.addEventListener("mousemove", (e) => {
   if (drawFlag) {
     pointarr.push([cursor.x, cursor.y, e.offsetX, e.offsetY]);
     canvas.dispatchEvent(drawChange);
-    // ctx?.beginPath();
-    // ctx?.moveTo(cursor.x, cursor.y);
-    // ctx?.lineTo(e.offsetX, e.offsetY);
-    // ctx?.stroke();
-    // cursor.x = e.offsetX;
-    // cursor.y = e.offsetY;
   }
 });
 
