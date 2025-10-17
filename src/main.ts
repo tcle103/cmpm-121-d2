@@ -25,6 +25,7 @@ canvas.addEventListener("pointerdown", (e) => {
   cursor.x = e.offsetX;
   cursor.y = e.offsetY;
   pointarr.push([]);
+  redoarr.splice(0, redoarr.length);
 });
 canvas.addEventListener("pointerup", () => {
   drawFlag = false;
