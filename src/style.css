@@ -2,4 +2,9 @@ canvas {
   border: solid black 1px;
   border-radius: 3px;
   box-shadow: 3px 3px grey;
+  display: block;
+}
+
+button {
+  margin-top: 5px;
 }

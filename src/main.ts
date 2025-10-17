@@ -1,6 +1,7 @@
 import "./style.css";
 
 const canvas: HTMLCanvasElement = document.createElement("canvas");
+const clearButton: HTMLButtonElement = document.createElement("button");
 const ctx = canvas.getContext("2d");
 let drawFlag = false;
 const cursor = { x: 0, y: 0 };
@@ -9,6 +10,7 @@ document.body.innerHTML += `<h1>draw</h1>`;
 canvas.height = 256;
 canvas.width = 256;
 document.body.append(canvas);
+document.body.append(clearButton);
 
 canvas.addEventListener("pointerdown", (e) => {
   drawFlag = true;
@@ -28,4 +30,9 @@ canvas.addEventListener("mousemove", (e) => {
     cursor.x = e.offsetX;
     cursor.y = e.offsetY;
   }
+});
+
+clearButton.innerHTML = "clear";
+clearButton.addEventListener("click", () => {
+  ctx?.clearRect(0, 0, 256, 256);
 });
