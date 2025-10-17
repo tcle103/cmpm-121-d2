@@ -32,23 +32,27 @@ canvas.addEventListener("mousemove", (e) => {
 
 canvas.addEventListener("drawing-changed", () => {
   console.log("wah!");
+  ctx?.clearRect(0, 0, 256, 256);
   ctx?.beginPath();
-  const pt1: number[] = [
-    pointarr[pointarr.length - 1][0],
-    pointarr[pointarr.length - 1][1],
-  ];
-  const pt2: number[] = [
-    pointarr[pointarr.length - 1][2],
-    pointarr[pointarr.length - 1][3],
-  ];
-  ctx?.moveTo(pt1[0], pt1[1]);
-  ctx?.lineTo(pt2[0], pt2[1]);
-  ctx?.stroke();
-  cursor.x = pt2[0];
-  cursor.y = pt2[1];
+  for (let i: number = 0; i < pointarr.length; ++i) {
+    const pt1: number[] = [
+      pointarr[i][0],
+      pointarr[i][1],
+    ];
+    const pt2: number[] = [
+      pointarr[i][2],
+      pointarr[i][3],
+    ];
+    ctx?.moveTo(pt1[0], pt1[1]);
+    ctx?.lineTo(pt2[0], pt2[1]);
+    ctx?.stroke();
+    cursor.x = pt2[0];
+    cursor.y = pt2[1];
+  }
 });
 
 clearButton.innerHTML = "clear";
 clearButton.addEventListener("click", () => {
   ctx?.clearRect(0, 0, 256, 256);
+  pointarr.splice(0, pointarr.length);
 });
