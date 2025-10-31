@@ -10,6 +10,10 @@ const pointarr: number[][][] = [];
 const redoarr: number[][][] = [];
 const drawChange: Event = new Event("drawing-changed");
 let drawFlag: boolean = false;
+interface Line {
+  points: number[][];
+  display(pts: number[][]): void;
+}
 
 document.body.innerHTML += `<h1>draw</h1>`;
 canvas.height = 256;
@@ -18,6 +22,14 @@ document.body.append(canvas);
 document.body.append(clearButton);
 document.body.append(undoButton);
 document.body.append(redoButton);
+
+function draw(pts: number[][]): void {
+  ctx?.moveTo(pts[0][0], pts[0][1]);
+  ctx?.lineTo(pts[1][0], pts[1][1]);
+  ctx?.stroke();
+  cursor.x = pts[1][0];
+  cursor.y = pts[1][1];
+}
 
 canvas.addEventListener("pointerdown", (e) => {
   drawFlag = true;
@@ -57,11 +69,12 @@ canvas.addEventListener("drawing-changed", () => {
         line[i][2],
         line[i][3],
       ];
-      ctx?.moveTo(pt1[0], pt1[1]);
-      ctx?.lineTo(pt2[0], pt2[1]);
-      ctx?.stroke();
-      cursor.x = pt2[0];
-      cursor.y = pt2[1];
+      // ctx?.moveTo(pt1[0], pt1[1]);
+      // ctx?.lineTo(pt2[0], pt2[1]);
+      // ctx?.stroke();
+      // cursor.x = pt2[0];
+      // cursor.y = pt2[1];
+      draw([pt1, pt2]);
     }
   }
 });
