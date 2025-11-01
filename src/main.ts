@@ -1,7 +1,7 @@
 import "./style.css";
 
-const thinStyle = 1;
-const thickStyle = 3;
+const thinStyle: number = 1;
+// const thickStyle: number = 3;
 const canvas: HTMLCanvasElement = document.createElement("canvas");
 const clearButton: HTMLButtonElement = document.createElement("button");
 const undoButton: HTMLButtonElement = document.createElement("button");
