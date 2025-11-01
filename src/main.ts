@@ -1,11 +1,14 @@
 import "./style.css";
 
 const thinStyle: number = 1;
-// const thickStyle: number = 3;
+const thickStyle: number = 3;
+let currStyle: number = thinStyle;
 const canvas: HTMLCanvasElement = document.createElement("canvas");
 const clearButton: HTMLButtonElement = document.createElement("button");
 const undoButton: HTMLButtonElement = document.createElement("button");
 const redoButton: HTMLButtonElement = document.createElement("button");
+const tools: HTMLButtonElement[] = [];
+const toolsList: Object = { "pen": thinStyle, "marker": thickStyle };
 const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
 const cursor = { x: 0, y: 0 };
 const linearr: Line[] = [];
@@ -34,6 +37,15 @@ document.body.append(canvas);
 document.body.append(clearButton);
 document.body.append(undoButton);
 document.body.append(redoButton);
+
+for (const [key, value] of Object.entries(toolsList)) {
+  const tempButt = document.createElement("button");
+  tools.push(tempButt);
+  tempButt.innerHTML = key;
+  tempButt.addEventListener("click", () => {
+    currStyle = value;
+  });
+}
 
 function draw(
   ctx: CanvasRenderingContext2D | null,
@@ -100,14 +112,14 @@ canvas.addEventListener("mousemove", (e) => {
 });
 
 canvas.addEventListener("drawing-changed", () => {
-  linearr[linearr.length - 1].drag(ctx, linearr[linearr.length - 1], thinStyle);
+  linearr[linearr.length - 1].drag(ctx, linearr[linearr.length - 1], currStyle);
 });
 
 canvas.addEventListener("redraw", () => {
   ctx?.clearRect(0, 0, 256, 256);
   console.log(linearr);
   for (let i: number = 0; i < linearr.length; ++i) {
-    linearr[i].display(ctx, linearr[i], thinStyle);
+    linearr[i].display(ctx, linearr[i], currStyle);
   }
 });
 
