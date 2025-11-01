@@ -14,6 +14,7 @@ let drawFlag: boolean = false;
 interface Line {
   points: number[][];
   display(obj: Line): void;
+  drag(obj: Line): void;
 }
 
 document.body.innerHTML += `<h1>draw</h1>`;
@@ -35,6 +36,15 @@ function draw(obj: Line): void {
   }
 }
 
+function iterDraw(obj: Line): void {
+  const pt = obj.points[obj.points.length - 1];
+  ctx?.moveTo(pt[0], pt[1]);
+  ctx?.lineTo(pt[2], pt[3]);
+  ctx?.stroke();
+  cursor.x = pt[2];
+  cursor.y = pt[3];
+}
+
 canvas.addEventListener("pointerdown", (e) => {
   drawFlag = true;
   // console.log("down!");
@@ -43,6 +53,7 @@ canvas.addEventListener("pointerdown", (e) => {
   const line: Line = {
     points: [],
     display: draw,
+    drag: iterDraw,
   };
   linearr.push(line);
   redoarr.splice(0, redoarr.length);
@@ -64,8 +75,8 @@ canvas.addEventListener("mousemove", (e) => {
 
 canvas.addEventListener("drawing-changed", () => {
   // console.log("wah!");
-  ctx?.clearRect(0, 0, 256, 256);
-  ctx?.beginPath();
+  // ctx?.clearRect(0, 0, 256, 256);
+  // ctx?.beginPath();
   // for (let j: number = 0; j < pointarr.length; ++j) {
   //   const line: number[][] = pointarr[j];
   //   for (let i: number = 0; i < line.length; ++i) {
@@ -85,12 +96,13 @@ canvas.addEventListener("drawing-changed", () => {
   //     draw([pt1, pt2]);
   //   }
   // }
-  for (let j: number = 0; j < linearr.length; ++j) {
-    // console.log(linearr[j]);
-    for (let i: number = 0; i < linearr[j].points.length; ++i) {
-      linearr[j].display(linearr[j]);
-    }
-  }
+  // for (let j: number = 0; j < linearr.length; ++j) {
+  //   // console.log(linearr[j]);
+  //   for (let i: number = 0; i < linearr[j].points.length; ++i) {
+  //     linearr[j].display(linearr[j]);
+  //   }
+  // }
+  linearr[linearr.length - 1].drag(linearr[linearr.length - 1]);
 });
 
 clearButton.innerHTML = "clear";
