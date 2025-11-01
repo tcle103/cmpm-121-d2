@@ -41,7 +41,6 @@ function draw(ctx: CanvasRenderingContext2D | null, obj: Line): void {
 }
 
 function iterDraw(obj: Line): void {
-  // console.log("iterDrawing" + obj);
   const pt = obj.points[obj.points.length - 1];
   ctx?.moveTo(pt[0], pt[1]);
   ctx?.lineTo(pt[2], pt[3]);
@@ -52,7 +51,6 @@ function iterDraw(obj: Line): void {
 
 canvas.addEventListener("pointerdown", (e) => {
   drawFlag = true;
-  // console.log("down!");
   ctx?.beginPath();
   cursor.x = e.offsetX;
   cursor.y = e.offsetY;
