@@ -7,7 +7,6 @@ const redoButton: HTMLButtonElement = document.createElement("button");
 const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
 const cursor = { x: 0, y: 0 };
 const linearr: Line[] = [];
-const pointarr: number[][][] = [];
 const redoarr: Line[] = [];
 const drawChange: Event = new Event("drawing-changed");
 const redraw: Event = new Event("redraw");
@@ -81,7 +80,6 @@ canvas.addEventListener("mousemove", (e) => {
 });
 
 canvas.addEventListener("drawing-changed", () => {
-  // ctx?.clearRect(0, 0, 256, 256);
   linearr[linearr.length - 1].drag(linearr[linearr.length - 1]);
 });
 
