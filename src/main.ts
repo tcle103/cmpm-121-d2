@@ -4,16 +4,17 @@ const canvas: HTMLCanvasElement = document.createElement("canvas");
 const clearButton: HTMLButtonElement = document.createElement("button");
 const undoButton: HTMLButtonElement = document.createElement("button");
 const redoButton: HTMLButtonElement = document.createElement("button");
-const ctx = canvas.getContext("2d");
+const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
 const cursor = { x: 0, y: 0 };
 const linearr: Line[] = [];
 const pointarr: number[][][] = [];
-const redoarr: number[][][] = [];
+const redoarr: Line[] = [];
 const drawChange: Event = new Event("drawing-changed");
+const redraw: Event = new Event("redraw");
 let drawFlag: boolean = false;
 interface Line {
   points: number[][];
-  display(obj: Line): void;
+  display(ctx: CanvasRenderingContext2D | null, obj: Line): void;
   drag(obj: Line): void;
 }
 
@@ -25,15 +26,18 @@ document.body.append(clearButton);
 document.body.append(undoButton);
 document.body.append(redoButton);
 
-function draw(obj: Line): void {
-  console.log("drawing");
-  for (let i: number = 0; i < obj.points.length; ++i) {
-    const pt = obj.points[i];
-    ctx?.moveTo(pt[0], pt[1]);
-    ctx?.lineTo(pt[2], pt[3]);
-    ctx?.stroke();
-    cursor.x = pt[2];
-    cursor.y = pt[3];
+function draw(ctx: CanvasRenderingContext2D | null, obj: Line): void {
+  if (ctx) {
+    console.log("drawing");
+    ctx?.beginPath();
+    for (let i: number = 0; i < obj.points.length; ++i) {
+      const pt = obj.points[i];
+      ctx.moveTo(pt[0], pt[1]);
+      ctx.lineTo(pt[2], pt[3]);
+      ctx.stroke();
+      cursor.x = pt[2];
+      cursor.y = pt[3];
+    }
   }
 }
 
@@ -81,31 +85,38 @@ canvas.addEventListener("drawing-changed", () => {
   linearr[linearr.length - 1].drag(linearr[linearr.length - 1]);
 });
 
+canvas.addEventListener("redraw", () => {
+  ctx?.clearRect(0, 0, 256, 256);
+  console.log(linearr);
+  for (let i: number = 0; i < linearr.length; ++i) {
+    linearr[i].display(ctx, linearr[i]);
+  }
+});
+
 clearButton.innerHTML = "clear";
 clearButton.addEventListener("click", () => {
   linearr.splice(0);
-  console.log(linearr);
   ctx?.clearRect(0, 0, 256, 256);
 });
 
 undoButton.innerHTML = "undo";
 undoButton.addEventListener("click", () => {
-  if (pointarr.length > 0) {
-    const temp: number[][] | undefined = pointarr.pop();
+  if (linearr.length > 0) {
+    const temp: Line | undefined = linearr.pop();
     if (temp) {
       redoarr.push(temp);
     }
-    canvas.dispatchEvent(drawChange);
+    canvas.dispatchEvent(redraw);
   }
 });
 
 redoButton.innerHTML = "redo";
 redoButton.addEventListener("click", () => {
   if (redoarr.length > 0) {
-    const temp: number[][] | undefined = redoarr.pop();
+    const temp: Line | undefined = redoarr.pop();
     if (temp) {
-      pointarr.push(temp);
+      linearr.push(temp);
     }
-    canvas.dispatchEvent(drawChange);
+    canvas.dispatchEvent(redraw);
   }
 });
