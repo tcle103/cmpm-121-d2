@@ -21,7 +21,7 @@ const toolsList = {
 const styleDrawList = {
   pen: [draw, iterDraw],
   marker: [draw, iterDraw],
-  "🥞": [draw, iterDraw],
+  "🥞": [emoteDraw, iterDraw],
 };
 const toolDrawList = {
   pen: toolDraw,
@@ -143,6 +143,23 @@ function emoteToolDraw(
       tool,
       cursor.x - emoteSize / 2,
       cursor.y + emoteSize / 4,
+    );
+  }
+}
+
+function emoteDraw(
+  ctx: CanvasRenderingContext2D | null,
+  obj: Line,
+  strokeWidth: number,
+): void {
+  if (ctx) {
+    console.log("emoteDrawing");
+    ctx.lineWidth = strokeWidth;
+    ctx.font = `${emoteSize}px serif`;
+    ctx.fillText(
+      obj.style,
+      obj.points[obj.points.length - 1][2] - emoteSize / 2,
+      obj.points[obj.points.length - 1][3] + emoteSize / 4,
     );
   }
 }
