@@ -16,7 +16,17 @@ div {
   display: block;
 }
 
+.toolInline {
+  display: inline;
+}
+
+.spaced {
+  margin: 8px;
+}
+
 canvas {
+  width: 100%;
+  max-width: 1024px;
   border: solid black 1px;
   border-radius: 3px;
   box-shadow: 3px 3px grey;

@@ -131,6 +131,21 @@ addButton.addEventListener("click", () => {
   }
 });
 
+if (globalThis.screen.width < 768 || globalThis.screen.width < 768) {
+  console.log("tiny!");
+  document.body.style.flexDirection = "column";
+  toolsDiv.style.textAlign = "center";
+  for (let i: number = 0; i < tools.length; ++i) {
+    tools[i].className = "toolInline spaced";
+  }
+  tools[0].className += " selectedTool";
+  for (const child of canvasDiv.children) {
+    if (child instanceof HTMLButtonElement) {
+      child.className += " spaced";
+    }
+  }
+}
+
 tools[0].className += " selectedTool";
 
 function draw(
