@@ -10,6 +10,7 @@ const canvas: HTMLCanvasElement = document.createElement("canvas");
 const clearButton: HTMLButtonElement = document.createElement("button");
 const undoButton: HTMLButtonElement = document.createElement("button");
 const redoButton: HTMLButtonElement = document.createElement("button");
+const exportButton: HTMLButtonElement = document.createElement("button");
 const addButton: HTMLButtonElement = document.createElement("button");
 const canvasDiv: HTMLDivElement = document.createElement("div");
 const toolsDiv: HTMLDivElement = document.createElement("div");
@@ -43,6 +44,8 @@ const drawChange: Event = new Event("drawing-changed");
 const redraw: Event = new Event("redraw");
 const toolMove: Event = new Event("tool-moved");
 let drawFlag: boolean = false;
+const height: number = 256;
+const width: number = 256;
 interface Line {
   points: number[][];
   style: string;
@@ -69,12 +72,14 @@ const previewList = { none: { tool: "b", draw: toolDraw } };
 document.body.append(canvasDiv);
 canvasDiv.innerHTML += `<h1>draw</h1>`;
 canvasDiv.id = "canvasDiv";
-canvas.height = 256;
-canvas.width = 256;
+canvas.height = height;
+canvas.width = width;
+ctx?.clearRect(0, 0, height, width);
 canvasDiv.append(canvas);
 canvasDiv.append(clearButton);
 canvasDiv.append(undoButton);
 canvasDiv.append(redoButton);
+canvasDiv.append(exportButton);
 document.body.append(toolsDiv);
 toolsDiv.id = "toolsDiv";
 
@@ -283,7 +288,7 @@ canvas.addEventListener("drawing-changed", () => {
 });
 
 canvas.addEventListener("redraw", () => {
-  ctx?.clearRect(0, 0, 256, 256);
+  ctx?.clearRect(0, 0, height, width);
   for (let i: number = 0; i < linearr.length; ++i) {
     linearr[i].display(
       ctx,
@@ -301,7 +306,7 @@ canvas.addEventListener("tool-moved", () => {
 clearButton.innerHTML = "clear";
 clearButton.addEventListener("click", () => {
   linearr.splice(0);
-  ctx?.clearRect(0, 0, 256, 256);
+  ctx?.clearRect(0, 0, height, width);
 });
 
 undoButton.innerHTML = "undo";
@@ -324,4 +329,33 @@ redoButton.addEventListener("click", () => {
     }
     canvas.dispatchEvent(redraw);
   }
+});
+
+exportButton.innerHTML = "export";
+exportButton.addEventListener("click", () => {
+  document.body.className += " disabled";
+  const tempCanvas: HTMLCanvasElement = document.createElement("canvas");
+  tempCanvas.width = height * 4;
+  tempCanvas.height = width * 4;
+  canvas.replaceWith(tempCanvas);
+  const tempCTX: CanvasRenderingContext2D | null = tempCanvas.getContext("2d");
+  if (tempCTX) {
+    tempCTX.scale(4, 4);
+    tempCTX.fillStyle = "white";
+    tempCTX.fillRect(0, 0, height, width);
+    tempCTX.lineCap = "round";
+    for (let i: number = 0; i < linearr.length; ++i) {
+      linearr[i].display(
+        tempCTX,
+        linearr[i],
+        toolsList[linearr[i].style as ObjectKey],
+      );
+    }
+    const anchor = document.createElement("a");
+    anchor.href = tempCanvas.toDataURL("image/png");
+    anchor.download = "sketchpad.png";
+    anchor.click();
+  }
+  tempCanvas.replaceWith(canvas);
+  document.body.className = "";
 });

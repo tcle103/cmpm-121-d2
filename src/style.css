@@ -1,7 +1,6 @@
 body {
   display: flex;
   flex: row;
-  height: 325px;
   align-items: center;
 }
 
@@ -30,4 +29,9 @@ button {
 
 h1 {
   margin: 3px;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.6;
 }
