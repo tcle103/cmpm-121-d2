@@ -21,7 +21,7 @@ const toolsList = {
 const styleDrawList = {
   pen: [draw, iterDraw],
   marker: [draw, iterDraw],
-  "🥞": [emoteDraw, iterDraw],
+  "🥞": [emoteDraw, emoteIterDraw],
 };
 const toolDrawList = {
   pen: toolDraw,
@@ -138,11 +138,11 @@ function emoteToolDraw(
   tool: string,
 ): void {
   if (ctx) {
-    ctx.font = `${emoteSize}px serif`;
+    ctx.font = `${emoteSize / 2}px serif`;
     ctx?.fillText(
       tool,
-      cursor.x - emoteSize / 2,
-      cursor.y + emoteSize / 4,
+      cursor.x - emoteSize / 4,
+      cursor.y + emoteSize / 8,
     );
   }
 }
@@ -160,6 +160,23 @@ function emoteDraw(
       obj.style,
       obj.points[obj.points.length - 1][2] - emoteSize / 2,
       obj.points[obj.points.length - 1][3] + emoteSize / 4,
+    );
+  }
+}
+
+function emoteIterDraw(
+  ctx: CanvasRenderingContext2D | null,
+  obj: Line,
+  strokeWidth: number,
+): void {
+  canvas.dispatchEvent(redraw);
+  if (ctx) {
+    const pt = obj.points[obj.points.length - 1];
+    ctx.lineWidth = strokeWidth;
+    ctx.fillText(
+      obj.style,
+      pt[2] - emoteSize / 2,
+      pt[3] + emoteSize / 4,
     );
   }
 }
@@ -188,7 +205,14 @@ canvas.addEventListener("pointerdown", (e) => {
     drag: styleDrawList[currStyle as ObjectKey][1],
   };
   linearr.push(line);
+  linearr[linearr.length - 1].points.push([
+    cursor.x,
+    cursor.y,
+    e.offsetX + 1,
+    e.offsetY + 1,
+  ]);
   redoarr.splice(0, redoarr.length);
+  dispatchEvent(drawChange);
 });
 canvas.addEventListener("pointerup", () => {
   drawFlag = false;
