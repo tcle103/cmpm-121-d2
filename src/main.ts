@@ -16,17 +16,23 @@ const tools: HTMLButtonElement[] = [];
 const toolsList = {
   pen: thinStyle,
   marker: thickStyle,
-  "🥞": thinStyle,
+  "🥞": 0,
+  "🥛": 0,
+  "🥓": 0,
 };
 const styleDrawList = {
   pen: [draw, iterDraw],
   marker: [draw, iterDraw],
   "🥞": [emoteDraw, emoteIterDraw],
+  "🥛": [emoteDraw, emoteIterDraw],
+  "🥓": [emoteDraw, emoteIterDraw],
 };
 const toolDrawList = {
   pen: toolDraw,
   marker: toolDraw,
   "🥞": emoteToolDraw,
+  "🥛": emoteToolDraw,
+  "🥓": emoteToolDraw,
 };
 const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
 const cursor = { x: 0, y: 0 };
