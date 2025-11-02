@@ -7,6 +7,8 @@ const canvas: HTMLCanvasElement = document.createElement("canvas");
 const clearButton: HTMLButtonElement = document.createElement("button");
 const undoButton: HTMLButtonElement = document.createElement("button");
 const redoButton: HTMLButtonElement = document.createElement("button");
+const canvasDiv: HTMLDivElement = document.createElement("div");
+const toolsDiv: HTMLDivElement = document.createElement("div");
 const tools: HTMLButtonElement[] = [];
 const toolsList = { "pen": thinStyle, "marker": thickStyle };
 const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
@@ -30,22 +32,31 @@ interface Line {
   ): void;
 }
 
-document.body.innerHTML += `<h1>draw</h1>`;
+document.body.append(canvasDiv);
+canvasDiv.innerHTML += `<h1>draw</h1>`;
+canvasDiv.id = "canvasDiv";
 canvas.height = 256;
 canvas.width = 256;
-document.body.append(canvas);
-document.body.append(clearButton);
-document.body.append(undoButton);
-document.body.append(redoButton);
+canvasDiv.append(canvas);
+canvasDiv.append(clearButton);
+canvasDiv.append(undoButton);
+canvasDiv.append(redoButton);
+document.body.append(toolsDiv);
+toolsDiv.id = "toolsDiv";
 
 for (const [key, value] of Object.entries(toolsList)) {
   const tempButt = document.createElement("button");
   tools.push(tempButt);
   tempButt.innerHTML = key;
-  tempButt.addEventListener("click", () => {
+  tempButt.className = "tool";
+  tempButt.id = key;
+  tempButt.addEventListener("click", function () {
     currStyle = value;
+    setSelection(this);
   });
+  toolsDiv.append(tempButt);
 }
+tools[0].className += " selectedTool";
 
 function draw(
   ctx: CanvasRenderingContext2D | null,
@@ -80,6 +91,17 @@ function iterDraw(
     ctx.stroke();
     cursor.x = pt[2];
     cursor.y = pt[3];
+  }
+}
+
+function setSelection(butt: HTMLButtonElement | undefined): void {
+  if (butt) {
+    butt.className += " selectedTool";
+    for (let i: number = 0; i < tools.length; ++i) {
+      if (tools[i].id != butt.id) {
+        tools[i].className = "tool";
+      }
+    }
   }
 }
 

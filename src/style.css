@@ -1,3 +1,22 @@
+body {
+  display: flex;
+  flex: row;
+  height: 325px;
+  align-items: center;
+}
+
+div {
+  margin: 10px;
+}
+
+.selectedTool {
+  box-shadow: 0px 0px 1px 2px yellowgreen;
+}
+
+.tool {
+  display: block;
+}
+
 canvas {
   border: solid black 1px;
   border-radius: 3px;
