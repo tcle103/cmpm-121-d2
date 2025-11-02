@@ -218,7 +218,7 @@ canvas.addEventListener("pointerdown", (e) => {
   redoarr.splice(0, redoarr.length);
   dispatchEvent(drawChange);
 });
-canvas.addEventListener("pointerup", () => {
+document.addEventListener("pointerup", () => {
   drawFlag = false;
 });
 canvas.addEventListener("pointermove", (e) => {
