@@ -75,8 +75,6 @@ function draw(
       ctx.moveTo(pt[0], pt[1]);
       ctx.lineTo(pt[2], pt[3]);
       ctx.stroke();
-      cursor.x = pt[2];
-      cursor.y = pt[3];
     }
   }
 }
@@ -92,8 +90,6 @@ function iterDraw(
     ctx.moveTo(pt[0], pt[1]);
     ctx.lineTo(pt[2], pt[3]);
     ctx.stroke();
-    cursor.x = pt[2];
-    cursor.y = pt[3];
   }
 }
 
@@ -109,6 +105,7 @@ function setSelection(butt: HTMLButtonElement | undefined): void {
 }
 
 canvas.addEventListener("pointerdown", (e) => {
+  canvas.dispatchEvent(redraw);
   drawFlag = true;
   ctx?.beginPath();
   cursor.x = e.offsetX;
@@ -133,6 +130,8 @@ canvas.addEventListener("mousemove", (e) => {
       e.offsetX,
       e.offsetY,
     ]);
+    cursor.x = e.offsetX;
+    cursor.y = e.offsetY;
     canvas.dispatchEvent(drawChange);
   } else {
     cursor.x = e.offsetX;
@@ -163,8 +162,8 @@ canvas.addEventListener("redraw", () => {
 canvas.addEventListener("tool-moved", () => {
   canvas.dispatchEvent(redraw);
   ctx?.fillRect(
-    cursor.x - toolsList[currStyle],
-    cursor.y - toolsList[currStyle],
+    cursor.x,
+    cursor.y,
     toolsList[currStyle] * 2,
     toolsList[currStyle] * 2,
   );
