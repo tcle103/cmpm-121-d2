@@ -3,6 +3,7 @@ import "./style.css";
 const thinStyle: number = 1;
 const thickStyle: number = 3;
 let currStyle = "pen";
+const emoteSize = 30;
 type ObjectKey = keyof typeof toolsList;
 type PreviewKey = keyof typeof previewList;
 const canvas: HTMLCanvasElement = document.createElement("canvas");
@@ -25,7 +26,7 @@ const styleDrawList = {
 const toolDrawList = {
   pen: toolDraw,
   marker: toolDraw,
-  "🥞": toolDraw,
+  "🥞": emoteToolDraw,
 };
 const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
 const cursor = { x: 0, y: 0 };
@@ -128,6 +129,20 @@ function toolDraw(ctx: CanvasRenderingContext2D | null, tool: string): void {
       cursor.y,
       toolsList[tool as ObjectKey] * 2,
       toolsList[tool as ObjectKey] * 2,
+    );
+  }
+}
+
+function emoteToolDraw(
+  ctx: CanvasRenderingContext2D | null,
+  tool: string,
+): void {
+  if (ctx) {
+    ctx.font = `${emoteSize}px serif`;
+    ctx?.fillText(
+      tool,
+      cursor.x - emoteSize / 2,
+      cursor.y + emoteSize / 2,
     );
   }
 }
