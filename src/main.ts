@@ -12,7 +12,16 @@ const redoButton: HTMLButtonElement = document.createElement("button");
 const canvasDiv: HTMLDivElement = document.createElement("div");
 const toolsDiv: HTMLDivElement = document.createElement("div");
 const tools: HTMLButtonElement[] = [];
-const toolsList = { pen: thinStyle, marker: thickStyle };
+const toolsList = {
+  pen: thinStyle,
+  marker: thickStyle,
+  "🥞": thinStyle,
+};
+const styleDrawList = {
+  pen: [draw, iterDraw],
+  marker: [draw, iterDraw],
+  "🥞": [draw, iterDraw],
+};
 const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
 const cursor = { x: 0, y: 0 };
 const linearr: Line[] = [];
@@ -138,8 +147,8 @@ canvas.addEventListener("pointerdown", (e) => {
   const line: Line = {
     points: [],
     style: currStyle,
-    display: draw,
-    drag: iterDraw,
+    display: styleDrawList[currStyle as ObjectKey][0],
+    drag: styleDrawList[currStyle as ObjectKey][1],
   };
   linearr.push(line);
   redoarr.splice(0, redoarr.length);
