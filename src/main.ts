@@ -142,7 +142,7 @@ function emoteToolDraw(
     ctx?.fillText(
       tool,
       cursor.x - emoteSize / 2,
-      cursor.y + emoteSize / 2,
+      cursor.y + emoteSize / 4,
     );
   }
 }
