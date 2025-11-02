@@ -96,7 +96,6 @@ function draw(
   strokeWidth: number,
 ): void {
   if (ctx) {
-    console.log("drawing");
     ctx.lineWidth = strokeWidth;
     ctx?.beginPath();
     for (let i: number = 0; i < obj.points.length; ++i) {
@@ -153,7 +152,6 @@ function emoteDraw(
   strokeWidth: number,
 ): void {
   if (ctx) {
-    console.log("emoteDrawing");
     ctx.lineWidth = strokeWidth;
     ctx.font = `${emoteSize}px serif`;
     ctx.fillText(
