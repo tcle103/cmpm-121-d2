@@ -2,7 +2,8 @@ import "./style.css";
 
 const thinStyle: number = 1;
 const thickStyle: number = 3;
-let currStyle: number = thinStyle;
+let currStyle = "pen" as ObjectKey;
+type ObjectKey = keyof typeof toolsList;
 const canvas: HTMLCanvasElement = document.createElement("canvas");
 const clearButton: HTMLButtonElement = document.createElement("button");
 const undoButton: HTMLButtonElement = document.createElement("button");
@@ -10,13 +11,14 @@ const redoButton: HTMLButtonElement = document.createElement("button");
 const canvasDiv: HTMLDivElement = document.createElement("div");
 const toolsDiv: HTMLDivElement = document.createElement("div");
 const tools: HTMLButtonElement[] = [];
-const toolsList = { "pen": thinStyle, "marker": thickStyle };
+const toolsList = { pen: thinStyle, marker: thickStyle };
 const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
 const cursor = { x: 0, y: 0 };
 const linearr: Line[] = [];
 const redoarr: Line[] = [];
 const drawChange: Event = new Event("drawing-changed");
 const redraw: Event = new Event("redraw");
+const toolMove: Event = new Event("tool-moved");
 let drawFlag: boolean = false;
 interface Line {
   points: number[][];
@@ -44,14 +46,14 @@ canvasDiv.append(redoButton);
 document.body.append(toolsDiv);
 toolsDiv.id = "toolsDiv";
 
-for (const [key, value] of Object.entries(toolsList)) {
+for (const key of Object.keys(toolsList)) {
   const tempButt = document.createElement("button");
   tools.push(tempButt);
   tempButt.innerHTML = key;
   tempButt.className = "tool";
   tempButt.id = key;
   tempButt.addEventListener("click", function () {
-    currStyle = value;
+    currStyle = this.id as ObjectKey;
     setSelection(this);
   });
   toolsDiv.append(tempButt);
@@ -130,19 +132,28 @@ canvas.addEventListener("mousemove", (e) => {
       e.offsetY,
     ]);
     canvas.dispatchEvent(drawChange);
+  } else {
+    canvas.dispatchEvent(toolMove);
   }
 });
 
 canvas.addEventListener("drawing-changed", () => {
-  linearr[linearr.length - 1].drag(ctx, linearr[linearr.length - 1], currStyle);
+  linearr[linearr.length - 1].drag(
+    ctx,
+    linearr[linearr.length - 1],
+    toolsList[currStyle],
+  );
 });
 
 canvas.addEventListener("redraw", () => {
   ctx?.clearRect(0, 0, 256, 256);
   console.log(linearr);
   for (let i: number = 0; i < linearr.length; ++i) {
-    linearr[i].display(ctx, linearr[i], currStyle);
+    linearr[i].display(ctx, linearr[i], toolsList[currStyle]);
   }
+});
+
+canvas.addEventListener("tool-moved", () => {
 });
 
 clearButton.innerHTML = "clear";
