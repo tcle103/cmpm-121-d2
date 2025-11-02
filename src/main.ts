@@ -2,8 +2,9 @@ import "./style.css";
 
 const thinStyle: number = 1;
 const thickStyle: number = 3;
-let currStyle = "pen" as ObjectKey;
+let currStyle = "pen";
 type ObjectKey = keyof typeof toolsList;
+type PreviewKey = keyof typeof previewList;
 const canvas: HTMLCanvasElement = document.createElement("canvas");
 const clearButton: HTMLButtonElement = document.createElement("button");
 const undoButton: HTMLButtonElement = document.createElement("button");
@@ -34,6 +35,14 @@ interface Line {
     strokeWidth: number,
   ): void;
 }
+interface ToolPreview {
+  tool: string;
+  draw(
+    ctx: CanvasRenderingContext2D | null,
+    tool: string,
+  ): void;
+}
+const previewList = { none: { tool: "b", draw: toolDraw } };
 
 document.body.append(canvasDiv);
 canvasDiv.innerHTML += `<h1>draw</h1>`;
@@ -53,6 +62,11 @@ for (const key of Object.keys(toolsList)) {
   tempButt.innerHTML = key;
   tempButt.className = "tool";
   tempButt.id = key;
+  const preview: ToolPreview = {
+    tool: key,
+    draw: toolDraw,
+  };
+  previewList[key as PreviewKey] = preview;
   tempButt.addEventListener("click", function () {
     currStyle = this.id as ObjectKey;
     setSelection(this);
@@ -90,6 +104,17 @@ function iterDraw(
     ctx.moveTo(pt[0], pt[1]);
     ctx.lineTo(pt[2], pt[3]);
     ctx.stroke();
+  }
+}
+
+function toolDraw(ctx: CanvasRenderingContext2D | null, tool: string): void {
+  if (ctx) {
+    ctx?.fillRect(
+      cursor.x,
+      cursor.y,
+      toolsList[tool as ObjectKey] * 2,
+      toolsList[tool as ObjectKey] * 2,
+    );
   }
 }
 
@@ -161,12 +186,7 @@ canvas.addEventListener("redraw", () => {
 
 canvas.addEventListener("tool-moved", () => {
   canvas.dispatchEvent(redraw);
-  ctx?.fillRect(
-    cursor.x,
-    cursor.y,
-    toolsList[currStyle] * 2,
-    toolsList[currStyle] * 2,
-  );
+  previewList[currStyle as PreviewKey].draw(ctx, currStyle);
 });
 
 clearButton.innerHTML = "clear";
