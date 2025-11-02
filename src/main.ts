@@ -22,6 +22,11 @@ const styleDrawList = {
   marker: [draw, iterDraw],
   "🥞": [draw, iterDraw],
 };
+const toolDrawList = {
+  pen: toolDraw,
+  marker: toolDraw,
+  "🥞": toolDraw,
+};
 const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
 const cursor = { x: 0, y: 0 };
 const linearr: Line[] = [];
@@ -73,7 +78,7 @@ for (const key of Object.keys(toolsList)) {
   tempButt.id = key;
   const preview: ToolPreview = {
     tool: key,
-    draw: toolDraw,
+    draw: toolDrawList[key as ObjectKey],
   };
   previewList[key as PreviewKey] = preview;
   tempButt.addEventListener("click", function () {
