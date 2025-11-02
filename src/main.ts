@@ -22,6 +22,7 @@ const toolMove: Event = new Event("tool-moved");
 let drawFlag: boolean = false;
 interface Line {
   points: number[][];
+  style: string;
   display(
     ctx: CanvasRenderingContext2D | null,
     obj: Line,
@@ -114,6 +115,7 @@ canvas.addEventListener("pointerdown", (e) => {
   cursor.y = e.offsetY;
   const line: Line = {
     points: [],
+    style: currStyle,
     display: draw,
     drag: iterDraw,
   };
@@ -133,6 +135,8 @@ canvas.addEventListener("mousemove", (e) => {
     ]);
     canvas.dispatchEvent(drawChange);
   } else {
+    cursor.x = e.offsetX;
+    cursor.y = e.offsetY;
     canvas.dispatchEvent(toolMove);
   }
 });
@@ -141,19 +145,29 @@ canvas.addEventListener("drawing-changed", () => {
   linearr[linearr.length - 1].drag(
     ctx,
     linearr[linearr.length - 1],
-    toolsList[currStyle],
+    toolsList[linearr[linearr.length - 1].style as ObjectKey],
   );
 });
 
 canvas.addEventListener("redraw", () => {
   ctx?.clearRect(0, 0, 256, 256);
-  console.log(linearr);
   for (let i: number = 0; i < linearr.length; ++i) {
-    linearr[i].display(ctx, linearr[i], toolsList[currStyle]);
+    linearr[i].display(
+      ctx,
+      linearr[i],
+      toolsList[linearr[i].style as ObjectKey],
+    );
   }
 });
 
 canvas.addEventListener("tool-moved", () => {
+  canvas.dispatchEvent(redraw);
+  ctx?.fillRect(
+    cursor.x - toolsList[currStyle],
+    cursor.y - toolsList[currStyle],
+    toolsList[currStyle] * 2,
+    toolsList[currStyle] * 2,
+  );
 });
 
 clearButton.innerHTML = "clear";
