@@ -147,7 +147,7 @@ canvas.addEventListener("pointerdown", (e) => {
 canvas.addEventListener("pointerup", () => {
   drawFlag = false;
 });
-canvas.addEventListener("mousemove", (e) => {
+canvas.addEventListener("pointermove", (e) => {
   if (drawFlag) {
     linearr[linearr.length - 1].points.push([
       cursor.x,
@@ -163,6 +163,9 @@ canvas.addEventListener("mousemove", (e) => {
     cursor.y = e.offsetY;
     canvas.dispatchEvent(toolMove);
   }
+});
+canvas.addEventListener("pointerleave", () => {
+  canvas.dispatchEvent(redraw);
 });
 
 canvas.addEventListener("drawing-changed", () => {
