@@ -10,6 +10,7 @@ const canvas: HTMLCanvasElement = document.createElement("canvas");
 const clearButton: HTMLButtonElement = document.createElement("button");
 const undoButton: HTMLButtonElement = document.createElement("button");
 const redoButton: HTMLButtonElement = document.createElement("button");
+const addButton: HTMLButtonElement = document.createElement("button");
 const canvasDiv: HTMLDivElement = document.createElement("div");
 const toolsDiv: HTMLDivElement = document.createElement("div");
 const tools: HTMLButtonElement[] = [];
@@ -94,6 +95,37 @@ for (const key of Object.keys(toolsList)) {
   });
   toolsDiv.append(tempButt);
 }
+addButton.id = "addButton";
+addButton.innerHTML = "+ !";
+toolsDiv.append(addButton);
+addButton.addEventListener("click", () => {
+  const emote: string | null = prompt("enter emote to add as sticker!!", "💚");
+  if (emote) {
+    if (!(emote in toolsList)) {
+      toolsList[emote as ObjectKey] = 0;
+      styleDrawList[emote as ObjectKey] = [emoteDraw, emoteIterDraw];
+      toolDrawList[emote as ObjectKey] = emoteToolDraw;
+      addButton.remove();
+      const tempButt = document.createElement("button");
+      tools.push(tempButt);
+      tempButt.innerHTML = emote;
+      tempButt.className = "tool";
+      tempButt.id = emote;
+      const preview: ToolPreview = {
+        tool: emote,
+        draw: emoteToolDraw,
+      };
+      previewList[emote as PreviewKey] = preview;
+      tempButt.addEventListener("click", function () {
+        currStyle = this.id as ObjectKey;
+        setSelection(this);
+      });
+      toolsDiv.append(tempButt);
+      toolsDiv.append(addButton);
+    }
+  }
+});
+
 tools[0].className += " selectedTool";
 
 function draw(
