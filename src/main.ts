@@ -3,10 +3,13 @@ import "./style.css";
 const thinStyle: number = 1;
 const thickStyle: number = 3;
 let currStyle = "pen";
+let currColor = "#000000";
 const emoteSize = 30;
 type ObjectKey = keyof typeof toolsList;
 type PreviewKey = keyof typeof previewList;
 const canvas: HTMLCanvasElement = document.createElement("canvas");
+const inputDiv: HTMLDivElement = document.createElement("div");
+const colorInput: HTMLInputElement = document.createElement("input");
 const clearButton: HTMLButtonElement = document.createElement("button");
 const undoButton: HTMLButtonElement = document.createElement("button");
 const redoButton: HTMLButtonElement = document.createElement("button");
@@ -49,6 +52,7 @@ const width: number = 256;
 interface Line {
   points: number[][];
   style: string;
+  color: string;
   display(
     ctx: CanvasRenderingContext2D | null,
     obj: Line,
@@ -80,8 +84,17 @@ canvasDiv.append(clearButton);
 canvasDiv.append(undoButton);
 canvasDiv.append(redoButton);
 canvasDiv.append(exportButton);
+canvasDiv.append(inputDiv);
 document.body.append(toolsDiv);
 toolsDiv.id = "toolsDiv";
+inputDiv.id = "inputDiv";
+colorInput.type = "color";
+colorInput.id = "colorInput";
+colorInput.value = "#000000";
+colorInput.addEventListener("change", () => {
+  currColor = colorInput.value;
+});
+inputDiv.append(colorInput);
 
 for (const key of Object.keys(toolsList)) {
   const tempButt = document.createElement("button");
@@ -154,6 +167,7 @@ function draw(
   strokeWidth: number,
 ): void {
   if (ctx) {
+    ctx.strokeStyle = obj.color;
     ctx.lineWidth = strokeWidth;
     ctx?.beginPath();
     for (let i: number = 0; i < obj.points.length; ++i) {
@@ -172,6 +186,7 @@ function iterDraw(
 ): void {
   if (ctx) {
     const pt = obj.points[obj.points.length - 1];
+    ctx.strokeStyle = obj.color;
     ctx.lineWidth = strokeWidth;
     ctx.moveTo(pt[0], pt[1]);
     ctx.lineTo(pt[2], pt[3]);
@@ -181,6 +196,7 @@ function iterDraw(
 
 function toolDraw(ctx: CanvasRenderingContext2D | null, tool: string): void {
   if (ctx) {
+    ctx.fillStyle = currColor;
     ctx?.fillRect(
       cursor.x,
       cursor.y,
@@ -257,6 +273,7 @@ canvas.addEventListener("pointerdown", (e) => {
   const line: Line = {
     points: [],
     style: currStyle,
+    color: currColor,
     display: styleDrawList[currStyle as ObjectKey][0],
     drag: styleDrawList[currStyle as ObjectKey][1],
   };

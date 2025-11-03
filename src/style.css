@@ -24,6 +24,16 @@ div {
   margin: 8px;
 }
 
+#inputDiv {
+  display: inline;
+  margin: 0;
+}
+
+#colorInput {
+  height: 22px;
+  width: 50px;
+}
+
 canvas {
   width: 100%;
   max-width: 1024px;
